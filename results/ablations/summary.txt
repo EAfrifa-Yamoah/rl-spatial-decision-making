@@ -1,0 +1,42 @@
+REAL RESULTS FOR MANUSCRIPT REVISION (30 seeds each)
+======================================================================
+
+### Ablation 1: Reward (Q-learning, tabular, 12x12 gridworld)
+  sparse only:    0/30 converged, median goal-episode >= 500 (budget cap)
+  shaped:         30/30 converged, median goal-episode 8 (CI 5-12)
+  potential-based:29/30 converged, median goal-episode 6 (CI 4-8) — matches shaped policy
+  random dense:   30/30 converged, median goal-episode 9 (CI 6-12) — surprising
+
+### Ablation 2: State representation (Q-learning, shaped reward)
+  tabular:  30/30 converged, median 23 episodes to goal
+  linear:   17/30 converged, median 26 episodes to goal — instability
+  small_conv: 6/30 converged, median 20 episodes — fast to find goal but unstable at eval
+
+### Ablation 3: Algorithm (fixed reward + state, Problem C)
+  argmax_ucb:     RMSE 0.110 (CI 0.093-0.114)
+  softmax:        RMSE 0.124 (CI 0.111-0.139) — worse than argmax, p=0.0002
+  epsilon_greedy: RMSE 0.102 (CI 0.090-0.116) — indistinguishable from argmax, p=0.32
+  → When actual score is the same, greedy vs eps-greedy don't differ; softmax adds harmful noise
+
+### Ablation 3b: Kappa sweep (reward specification effect)
+  kappa=0.0 (pure greedy):    RMSE 0.256
+  kappa=0.5:                  RMSE 0.210
+  kappa=1.0:                  RMSE 0.125
+  kappa=1.5:                  RMSE 0.110 (paper's default)
+  kappa=2.0:                  RMSE 0.100 (optimum)
+  kappa=3.0:                  RMSE 0.109
+  kappa=5.0:                  RMSE 0.124
+  → U-shape confirms reward specification (kappa) drives ranking, not algorithm label
+
+### Problem C main (30 seeds, fresh replication)
+  random:  RMSE 0.127 (CI 0.120-0.141)
+  greedy:  RMSE 0.256 (CI 0.237-0.282)
+  UCB:     RMSE 0.110 (CI 0.093-0.114)
+  UCB vs random: p=0.0008; UCB vs greedy: p<1e-6; random vs greedy: p<1e-6
+
+### Held-out geography (Problem D SARSA)
+  ID (row 4):        100% success
+  OOD row 2:         69% success (CI 52-98%)  — obstacle moved higher, blocks earlier
+  OOD row 6:        100% success — obstacle moved lower, doesn't matter (goal is row 7)
+  OOD two obstacles: 74% success (CI 58-82%) — added second obstacle at row 5
+  → Asymmetric shift: only certain OOD conditions expose policy fragility

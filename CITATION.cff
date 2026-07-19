@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the accompanying manuscript."
+title: "Reinforcement Learning for Spatial Decision Making — code, ablations, and figures"
+abstract: >
+  Reproducible Python code for the eight figures, four canonical simulations,
+  and six factorial ablations in the review manuscript
+  'Reinforcement Learning for Spatial Decision Making: Methodological Gaps
+  in GIScience and a Research Agenda' (v4 revision).
+authors:
+  - family-names: "Afrifa-Yamoah"
+    given-names: "Ebenezer"
+    affiliation: "School of Science, Edith Cowan University, Perth, Australia"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Bradshaw"
+    given-names: "Stephen"
+    affiliation: "Department of Primary Industries and Regional Development, Perth, Australia"
+  - family-names: "Awuah-Mensah"
+    given-names: "Yaw Kwaafo"
+    affiliation: "School of Science, Edith Cowan University, Perth, Australia"
+  - family-names: "Nuakoh"
+    given-names: "Bright Wiredu"
+    affiliation: "African Institute for Mathematical Sciences (AIMS), Kigali, Rwanda"
+  - family-names: "Tan"
+    given-names: "Wei Hong"
+    affiliation: "Data & Analytics, Rio Tinto, Perth, Australia"
+  - family-names: "Fouedjio"
+    given-names: "Francky"
+    affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
+  - family-names: "Arya"
+    given-names: "Emet"
+    affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
+version: 4.0.0
+date-released: 2026-07-08
+license: MIT
+repository-code: "https://github.com/<user>/rl-spatial-decision-making"
+keywords:
+  - reinforcement learning
+  - spatial decision support
+  - Markov decision process
+  - GIScience
+  - path planning
+  - multi-agent systems
+  - adaptive sensing
+  - geospatial analytics
+  - held-out geography
+  - reproducibility
