@@ -10,7 +10,7 @@ authors:
   - family-names: "Afrifa-Yamoah"
     given-names: "Ebenezer"
     affiliation: "School of Science, Edith Cowan University, Perth, Australia"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0000-0003-1741-9249"
   - family-names: "Bradshaw"
     given-names: "Stephen"
     affiliation: "Department of Primary Industries and Regional Development, Perth, Australia"
@@ -30,7 +30,7 @@ authors:
     given-names: "Emet"
     affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
 version: 4.0.0
-date-released: 2026-07-08
+date-released: 2026-07-19
 license: MIT
 repository-code: "https://github.com/<user>/rl-spatial-decision-making"
 keywords:
