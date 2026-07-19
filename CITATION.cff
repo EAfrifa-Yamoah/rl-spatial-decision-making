@@ -32,7 +32,7 @@ authors:
 version: 4.0.0
 date-released: 2026-07-19
 license: MIT
-repository-code: "https://github.com/<user>/rl-spatial-decision-making"
+repository-code: "https://github.com/EAfrifa-Yamoah/rl-spatial-decision-making"
 keywords:
   - reinforcement learning
   - spatial decision support
