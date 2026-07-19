@@ -55,7 +55,7 @@ Note: v4 swaps figures 2 and 3 relative to v3, matching the corrected cross refe
 ## Quick start
 
 ```bash
-git clone https://github.com/<user>/rl-spatial-decision-making.git
+git clone https://github.com/EAfrifa-Yamoah/rl-spatial-decision-making.git
 cd rl-spatial-decision-making
 
 python -m venv .venv
@@ -262,6 +262,7 @@ If this code is useful to your work, please cite the accompanying manuscript. Se
   journal = {Transactions in GIS},
   year    = {2026},
   note    = {Code: https://github.com/<user>/rl-spatial-decision-making}
+  doi     = 10.5281/zenodo.21443791
 }
 ```
 
