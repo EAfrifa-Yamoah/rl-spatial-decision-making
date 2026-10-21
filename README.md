@@ -12,7 +12,7 @@ raw outputs of this repository** through one file, `results/manifest.json`.
 ## Quick start
 
 ```bash
-pip install -r requirements.txt          # Python 3.10 or later
+pip install -r requirements.txt          # Python 3.12 or later
 python -m pytest tests -q                # a few seconds
 python -m src.reproduce_all              # all four problems, about 15 min on 2 cores
 python -m tools.build_manifest           # every reported number -> results/manifest.json
