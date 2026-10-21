@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use this code, please cite the article and this archived release."
 title: "rl-spatial-decision-making: code and results for Reinforcement Learning for Spatial Decision Making"
 version: 6.0.0
+doi: 10.5281/zenodo.23529868
 date-released: 2026-10-21
 license: MIT
 authors:
@@ -27,6 +28,7 @@ authors:
   - family-names: "Arya"
     given-names: "Emet"
     affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
-# identifiers:
-#   - type: doi
-#     value: 10.5281/zenodo.XXXXXXX   # add after the Zenodo release is minted
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23529868
+    description: "Zenodo archive of release v6.0.0"
