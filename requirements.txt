@@ -1,0 +1,7 @@
+# Versions used to generate the published numbers (exact reproduction)
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2
+# Document tooling (tools/check_consistency.py only)
+python-docx>=1.1
+pytest>=8

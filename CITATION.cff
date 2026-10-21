@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the article and this archived release."
+title: "rl-spatial-decision-making: code and results for Reinforcement Learning for Spatial Decision Making"
+version: 6.0.0
+date-released: 2026-10-21
+license: MIT
+authors:
+  - family-names: Afrifa-Yamoah
+    given-names: Ebenezer
+    affiliation: Edith Cowan University
+  - family-names: Bradshaw
+    given-names: Stephen
+  - family-names: Awuah-Mensah
+    given-names: Yaw Kwaafo
+  - family-names: Nuakoh
+    given-names: Bright Wiredu
+  - family-names: Tan
+    given-names: Wei Hong
+  - family-names: Fouedjio
+    given-names: Francky
+  - family-names: Arya
+    given-names: Emet
+# identifiers:
+#   - type: doi
+#     value: 10.5281/zenodo.XXXXXXX   # add after the Zenodo release is minted
