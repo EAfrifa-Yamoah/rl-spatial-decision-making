@@ -1,279 +1,88 @@
-# Reinforcement Learning for Spatial Decision Making
+# rl-spatial-decision-making (v6)
 
-Reproducible Python code for the simulations, ablations, and figures in the review manuscript **"Reinforcement Learning for Spatial Decision Making: Methodological Gaps in GIScience and a Research Agenda"** (v4 revision).
+Code, raw results and figure scripts for *Reinforcement Learning for Spatial
+Decision Making: Methodological Gaps in GIScience and a Research Agenda*
+(Afrifa-Yamoah et al.).
 
-[![CI](https://github.com/<user>/rl-spatial-decision-making/actions/workflows/ci.yml/badge.svg)](https://github.com/<user>/rl-spatial-decision-making/actions/workflows/ci.yml)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-## Overview
-
-The repository produces (i) the eight figures used in the manuscript, (ii) the six reviewer requested factorial ablations added in v4, and (iii) the reference classification behind Figure 8.
-
-Everything runs on pure NumPy, SciPy, and Matplotlib. No deep learning framework is required, by design: the goal is pedagogical reproducibility, not raw performance.
-
-## v4 revision summary
-
-The v4 revision addresses reviewer feedback with three sets of code changes over v3. Revision documents (response letter, addendum, changelog) are separately committed:
-
-- [`CHANGELOG.md`](CHANGELOG.md) — What changed between v3 and v4
-- Manuscript v4 (`RL_Spatial_Decision_Making_v4.docx`) and the addendum with new content blocks (`Revision_Addendum.docx`) are distributed with the manuscript submission, not in this repository
-- Reviewer response letter (`Response_to_Reviewers.docx`) is likewise distributed with the manuscript submission
-
-The v4 revision addresses reviewer feedback with three sets of code changes over v3.
-
-**Ablation experiments (new in v4).** Every simulation is re run over 30 seeds with bootstrap 95 percent confidence intervals and paired Wilcoxon signed rank tests. Three factorial ablations are added:
-
-| Ablation | Fixed | Varied | Manuscript section |
-|---|---|---|---|
-| 1. Reward function | Q learning, tabular state | Sparse, shaped, potential based, random dense | 4.1 Problem A |
-| 2. State representation | Q learning, shaped reward | Tabular, linear FA, small conv features | 4.1 Problem A |
-| 3. Algorithm | UCB reward (kappa 1.5), posterior state | argmax UCB, softmax UCB, epsilon greedy | 4.3 Problem C |
-| 3b. Kappa sweep | argmax UCB algorithm | kappa in {0, 0.5, 1, 1.5, 2, 3, 5} | 4.3 Problem C |
-
-Plus a held out geography protocol demonstration on Problem D (train on obstacle row 4, test on rows 2 and 6 and on two simultaneous obstacles).
-
-**Corpus expansion (new in v4).** The reference bibliography grows from 80 to 98 entries. Figure 8 and the classifier in `docs/reference_classification.py` are regenerated. New categories: Transportation and traffic MARL, Remote sensing RL.
-
-**Section renumbering (new in v4).** A new Section 2 (Review Methodology) is inserted, so v3 Sections 2 through 7 become v4 Sections 3 through 8. Cross references throughout the manuscript are updated.
-
-## Figures
-
-| # | Script | Figure | Type | What it shows |
-|---|--------|--------|------|---------------|
-| 1 | `illustrations/fig01_mdp_framework.py`     | Fig. 1 | Schematic  | Spatial MDP and three state representations |
-| 2 | `illustrations/fig03_taxonomy.py`          | Fig. 2 | Schematic  | Taxonomy of RL methods and augmentations |
-| 3 | `simulations/sim01_qlearning_gridworld.py` | Fig. 3 | Simulation | Q learning convergence in a 12 by 12 gridworld |
-| 4 | `simulations/sim02_multi_agent.py`         | Fig. 4 | Simulation | Two independent Q learners with collision penalties |
-| 5 | `simulations/sim03_adaptive_sensor.py`     | Fig. 5 | Simulation | Adaptive sensor placement vs. greedy and random |
-| 6 | `simulations/sim04_dynamic_obstacle.py`    | Fig. 6 | Simulation | SARSA avoiding a patrolling dynamic obstacle |
-| 7 | `illustrations/fig07_flowchart.py`         | Fig. 7 | Schematic  | Practitioner decision flowchart |
-| 8 | `illustrations/fig08_applications.py`      | Fig. 8 | Data       | Application domain landscape and corpus composition |
-
-Note: v4 swaps figures 2 and 3 relative to v3, matching the corrected cross references in the revised manuscript. The taxonomy is now Figure 2 (it introduces algorithm families before the Q learning gridworld demonstrates them in Figure 3).
+v6 is a rebuild, not an edit, of the v5 bundle. In v5 the README stated that the
+code did not reproduce the manuscript's numbers. In v6 **every number, table and
+figure in the manuscript and the Supplementary Material is generated from the
+raw outputs of this repository** through one file, `results/manifest.json`.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/EAfrifa-Yamoah/rl-spatial-decision-making.git
-cd rl-spatial-decision-making
-
-python -m venv .venv
-source .venv/bin/activate       # Windows: .venv\Scripts\activate
-
-pip install -r requirements.txt
-pip install -e .
-
-# Reproduce every figure at 400 DPI (default) in ~2-3 minutes
-python -m src.reproduce_all
-
-# Reproduce every ablation with 30 seeds each (~5 minutes)
-python -m src.ablations.reproduce_all
-
-# Fast preview: fewer episodes, 200 DPI, ~30 seconds
-python -m src.reproduce_all --quick --dpi 200
+pip install -r requirements.txt          # Python 3.12 or later
+python -m pytest tests -q                # a few seconds
+python -m src.reproduce_all              # all four problems, about 15 min on 2 cores
+python -m tools.build_manifest           # every reported number -> results/manifest.json
+python -m src.figures.make_all           # every figure -> results/figures/ (PNG 600 dpi and PDF)
 ```
 
-All figures land in `figures/` as PNG files. All ablation JSON results land in `results/ablations/`.
+`python -m src.reproduce_all A C` runs a subset. Runtimes on the reference
+machine are recorded in `results/raw/environment.json`.
 
-## Running individual scripts
+## What each problem does
 
-### Figures
+| Problem | Module | Design (30 independent seeds per condition) |
+|---|---|---|
+| A | `src/simulations/problem_a.py` | Q-learning, 12 x 12 grid. A1: five rewards with algorithm and tabular state fixed. A1 sensitivity: deterministic tie-breaking with the first action toward or away from the goal. A2: four state representations, learning rate tuned per representation on 20 separate seeds. |
+| B | `src/simulations/problem_b.py` | Two agents swap rooms through a one-lane corridor. Independent Q-learners with own-position state, independent Q-learners with joint state, centralised joint-action learner. Greedy evaluation on 50 shared start pairs per seed. |
+| C | `src/simulations/problem_c.py` | 20 sensor placements on a 30 x 30 Gaussian process field. Six heuristic rules and a 2 x 2 factorial of learned policies (REINFORCE or linear Q-learning; RMSE-reduction or measured-concentration reward), 1,500 training fields per run, 30 held-out test fields and 30 shifted fields shared by all methods. Kappa sweep and action-selection sensitivity. |
+| D | `src/simulations/problem_d.py` | SARSA, 8 x 8 grid, one patrolling obstacle, collisions terminal. Row-blind or row-aware state, trained on row 4 or rows 2 to 4; exhaustive greedy evaluation on rows 1 to 6 and a two-obstacle test. |
 
-```bash
-# Gridworld Q-learning with more episodes and a different seed
-python -m src.simulations.sim01_qlearning_gridworld \
-    --episodes 1000 --seed 7 --dpi 400
+Full specifications are in the module docstrings and Supplementary Appendix B.
 
-# Adaptive sensor placement with a larger budget and more replicates
-python -m src.simulations.sim03_adaptive_sensor \
-    --budget 40 --replicates 20 --kappa 2.0
+## From manuscript item to code
 
-# Only the conceptual flowchart
-python -m src.illustrations.fig07_flowchart --dpi 300
-```
+| Manuscript item | Script | Manifest keys |
+|---|---|---|
+| Figure 1, 2, 8 | `src/figures/fig_concepts.py` | none (conceptual) |
+| Figure 3, Tables S3 to S5 | `src/figures/fig_problem_a.py` | `A.*` |
+| Figure 4, Table S6 | `src/figures/fig_problem_b.py` | `B.*` |
+| Figure 5, Figures S1 and S2, Tables S7 to S11 | `src/figures/fig_problem_c.py` | `C.*` |
+| Figure 6, Table S12 | `src/figures/fig_problem_d.py` | `D.*` |
+| Figure 7 | `src/figures/fig_references.py` | `docs/coding_sheet.csv` |
+| Table 3 and all numbers in Section 4 | `tools/build_manifest.py` | all |
 
-### Ablations
+`python -m tools.check_consistency MANUSCRIPT.docx SUPPLEMENT.docx [RESPONSE.docx]`
+re-reads the documents and reports
+any number that does not match the manifest, any figure, table, section or
+appendix reference without a target, and any citation without a reference
+entry (and vice versa).
 
-Each ablation writes a JSON summary in the current working directory:
+## Random numbers and reproducibility
 
-```bash
-# All six ablations in sequence with a final summary print
-python -m src.ablations.reproduce_all
+All randomness comes from `numpy.random.SeedSequence(20261021, spawn_key=(problem, condition, seed, ...))`
+(see `src/utils/__init__.py`), so every condition and seed has its own
+independent stream and adding a condition never changes another. Exact
+numerical reproduction was verified with the versions pinned in
+`requirements.txt` (Python 3.13, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2)
+on Linux. Other versions or BLAS libraries may change the last digits of
+Gaussian process computations and, through rare ties, individual
+placements in Problem C; qualitative results should not change. If they do,
+please open an issue.
 
-# Just print the summary from previously saved JSON
-python -m src.ablations.reproduce_all --summary-only
+## Statistics
 
-# One ablation at a time
-python -m src.ablations.ablation1_reward       # Reward on Problem A
-python -m src.ablations.ablation2_state        # State rep on Problem A
-python -m src.ablations.ablation3_algorithm    # Algorithm on Problem C
-python -m src.ablations.ablation3b_kappa       # Kappa sweep on Problem C
-python -m src.ablations.problem_c_30seeds      # Problem C main 30 seed rerun
-python -m src.ablations.holdout_geography_v2   # Held out geography on Problem D
-```
+Medians with 95% percentile bootstrap intervals (10,000 resamples) for
+continuous seed- or field-level metrics; means with bootstrap intervals for
+success rates averaged over evaluation rollouts; exact Clopper-Pearson
+intervals for counts of seeds; Mann-Whitney U with Cliff's delta (Fisher's
+exact test for counts) for independent training runs; Wilcoxon signed-rank
+with matched-pairs rank-biserial r for comparisons on the same test fields;
+Holm adjustment within each named family. A non-significant test is never
+read as evidence of equivalence.
 
-All scripts accept `--dpi` and `--out` (output filename stem). Simulations also accept `--episodes`, `--alpha`, `--gamma`, and `--seed` where applicable.
+## Figure colours
 
-## Repository layout
+One colour, one meaning, across all figures (Okabe and Ito palette, checked
+for colour-vision deficiency): dark blue, value-based learner with a full
+state; light blue, value-based learner with a restricted or compressed state;
+orange, policy-gradient learner; green, model-based methods; purple, RL
+augmentations; vermilion, hazards and safety; greys, non-learning baselines
+and environment structure. See `src/figures/style.py`.
 
-```
-.
-├── src/
-│   ├── utils.py                          # Seeding, plot style, save helper
-│   ├── reproduce_all.py                  # One command figure regeneration
-│   ├── simulations/
-│   │   ├── sim01_qlearning_gridworld.py
-│   │   ├── sim02_multi_agent.py
-│   │   ├── sim03_adaptive_sensor.py
-│   │   └── sim04_dynamic_obstacle.py
-│   ├── ablations/                        # v4 addition
-│   │   ├── ablation1_reward.py           # 4 reward functions on Problem A
-│   │   ├── ablation2_state.py            # 3 state representations on Problem A
-│   │   ├── ablation3_algorithm.py        # 3 algorithms on Problem C
-│   │   ├── ablation3b_kappa.py           # 7 point kappa sweep on Problem C
-│   │   ├── problem_c_30seeds.py          # 30 seed rerun of Problem C main
-│   │   ├── holdout_geography_v2.py       # OOD evaluation on Problem D
-│   │   └── reproduce_all.py              # Runner and summary printer
-│   └── illustrations/
-│       ├── fig01_mdp_framework.py
-│       ├── fig03_taxonomy.py             # v4: renumbered as Figure 2
-│       ├── fig07_flowchart.py
-│       └── fig08_applications.py         # v4: regenerated with 98 refs
-├── results/
-│   └── ablations/                        # v4 addition: JSON outputs
-├── tests/
-│   └── test_simulations.py               # Smoke tests (pytest)
-├── figures/                              # Generated outputs (PNG, 400 DPI)
-├── notebooks/                            # Optional Jupyter demos
-├── docs/
-│   ├── reference_classification.py       # v4: 98 refs, 12 domains
-│   └── simulation_notes.md
-├── .github/workflows/ci.yml
-├── requirements.txt
-├── setup.py
-├── CITATION.cff
-├── LICENSE
-└── README.md
-```
+## Licence and citation
 
-## Expected results
-
-On a modern laptop with no GPU, `python -m src.reproduce_all` completes in 2 to 4 minutes. The simulations will converge to:
-
-| Simulation | Reported outcome |
-|------------|------------------|
-| `sim01_qlearning_gridworld` | Final mean return around 97 over last 50 episodes (target around 98) |
-| `sim02_multi_agent`         | Final joint return around 196; collision free trajectories |
-| `sim03_adaptive_sensor`     | RMSE (median of 30 seeds): random around 0.13, greedy around 0.26, UCB around 0.11 |
-| `sim04_dynamic_obstacle`    | 100 percent success rate after around 1,800 episodes |
-
-### Expected ablation results
-
-`python -m src.ablations.reproduce_all` takes around 5 minutes and prints:
-
-**Reward on Problem A** (30 seeds, Q learning, tabular):
-```
-sparse       first-goal ep median=500  CI=[ 12, 500]  converged= 0/30
-shaped       first-goal ep median=  8  CI=[  5,  12]  converged=30/30
-pbrs         first-goal ep median=  6  CI=[  4,   8]  converged=29/30
-random_dense first-goal ep median=  9  CI=[  6,  12]  converged=30/30
-```
-
-**State representation on Problem A** (30 seeds, shaped reward):
-```
-tabular  first-goal ep median= 23  converged=30/30
-linear   first-goal ep median= 26  converged=17/30
-conv     first-goal ep median= 20  converged= 6/30
-```
-
-**Algorithm on Problem C** (30 seeds, UCB reward + posterior state):
-```
-argmax_ucb      RMSE median=0.1095  CI=[0.0932, 0.1137]
-softmax         RMSE median=0.1240  CI=[0.1114, 0.1386]
-epsilon_greedy  RMSE median=0.1015  CI=[0.0903, 0.1162]
-  Wilcoxon argmax_vs_softmax:         p=0.0002
-  Wilcoxon argmax_vs_epsilon_greedy:  p=0.32
-```
-
-**Kappa sweep** (30 seeds, argmax UCB): median RMSE ranges from 0.256 at kappa 0 to 0.100 at kappa 2.0 and back up to 0.124 at kappa 5.0. All differences vs kappa 0 are highly significant (p < 0.001).
-
-**Held out geography on Problem D** (30 SARSA seeds, trained on row 4):
-```
-in_distribution        success=100.00%  CI=[100.00%, 100.00%]
-shift_obstacle_row_2   success= 69.00%  CI=[ 52.00%,  98.00%]
-shift_obstacle_row_6   success=100.00%  CI=[100.00%, 100.00%]
-shift_two_obstacles    success= 74.00%  CI=[ 58.00%,  82.00%]
-```
-
-Seeds are set explicitly in each script so these numbers are deterministic across runs on the same machine.
-
-## Reference classification
-
-Figure 8 uses reference counts derived from classifying the manuscript's 98 references. Each reference is assigned to exactly one primary domain based on its citation context in the manuscript.
-
-```bash
-python -m docs.reference_classification
-```
-
-Prints:
-```
-Total references classified: 98
-
-By domain (descending count):
-  foundational           57
-  conservation_wildlife   6
-  sensor_placement        5
-  gis_rl                  5
-  autonomous_vehicles     4
-  transportation          4
-  robot_navigation        3
-  forestry_wildfire       3
-  water_reservoir         3
-  remote_sensing          3
-  env_monitoring          2
-  urban_planning          2
-  uav_swarm               1
-
-Applied domain refs:       41  (42%)
-Foundational refs:         57  (58%)
-```
-
-If you disagree with a classification, edit the `CLASSIFICATION` dictionary at the top of `docs/reference_classification.py` and rerun `python -m src.illustrations.fig08_applications` to refresh Figure 8.
-
-## Testing
-
-```bash
-pytest -q
-```
-
-The test suite runs each simulation at drastically reduced episode counts (seconds, not minutes) and verifies end to end execution, output shape, and sanity bounds. It does not verify convergence. The full reproduction is `python -m src.reproduce_all`.
-
-## Citation
-
-If this code is useful to your work, please cite the accompanying manuscript. See [`CITATION.cff`](CITATION.cff) for a machine readable version.
-
-```bibtex
-@article{rl_spatial_review_2026,
-  title   = {Reinforcement Learning for Spatial Decision Making:
-             Methodological Gaps in GIScience and a Research Agenda},
-  author  = {Afrifa-Yamoah, E. and Bradshaw, S. and Awuah-Mensah, Y. K.
-             and Nuakoh, B. W. and Tan, W. H. and Fouedjio, F. and Arya, E.},
-  journal = {Transactions in GIS},
-  year    = {2026},
-  note    = {Code: https://github.com/<user>/rl-spatial-decision-making}
-  doi     = 10.5281/zenodo.21443791
-}
-```
-
-## License
-
-MIT. See [`LICENSE`](LICENSE). You are free to use, modify, and redistribute, including for commercial purposes, with attribution.
-
-## Contributing
-
-Pull requests are welcome. For non trivial changes, please open an issue first to discuss what you would like to change. New simulations that illustrate additional clusters from the manuscript (hierarchical RL for long horizon tasks, transfer learning across maps) are particularly welcome.
-
-## Acknowledgements
-
-The simulations intentionally use small tabular problems to keep every piece of behaviour auditable. The algorithmic templates follow the canonical expositions in Sutton and Barto (2018), with adaptations described in the relevant sections of the manuscript. The v4 revision was informed by careful and constructive reviewer feedback.
+MIT. Please cite the manuscript and the archived release (see `CITATION.cff`).

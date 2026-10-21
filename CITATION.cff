@@ -1,11 +1,9 @@
 cff-version: 1.2.0
-message: "If you use this code, please cite the accompanying manuscript."
-title: "Reinforcement Learning for Spatial Decision Making — code, ablations, and figures"
-abstract: >
-  Reproducible Python code for the eight figures, four canonical simulations,
-  and six factorial ablations in the review manuscript
-  'Reinforcement Learning for Spatial Decision Making: Methodological Gaps
-  in GIScience and a Research Agenda' (v4 revision).
+message: "If you use this code, please cite the article and this archived release."
+title: "rl-spatial-decision-making: code and results for Reinforcement Learning for Spatial Decision Making"
+version: 6.0.0
+date-released: 2026-10-21
+license: MIT
 authors:
   - family-names: "Afrifa-Yamoah"
     given-names: "Ebenezer"
@@ -29,18 +27,6 @@ authors:
   - family-names: "Arya"
     given-names: "Emet"
     affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
-version: 4.0.0
-date-released: 2026-07-19
-license: MIT
-repository-code: "https://github.com/EAfrifa-Yamoah/rl-spatial-decision-making"
-keywords:
-  - reinforcement learning
-  - spatial decision support
-  - Markov decision process
-  - GIScience
-  - path planning
-  - multi-agent systems
-  - adaptive sensing
-  - geospatial analytics
-  - held-out geography
-  - reproducibility
+# identifiers:
+#   - type: doi
+#     value: 10.5281/zenodo.XXXXXXX   # add after the Zenodo release is minted

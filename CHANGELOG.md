@@ -1,67 +1,49 @@
 # Changelog
 
-All notable changes to this repository are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) with dates in ISO 8601.
+## v6.0.0
 
-## [4.0.0] — 2026-07-08
+Rebuild of the experiment code so that the manuscript, supplement and
+repository agree. Every reported number is now computed from
+`results/raw/*.json` by `tools/build_manifest.py`.
 
-### Added
-- New `src/ablations/` package with six reviewer requested ablation scripts:
-  - `ablation1_reward.py` — Four reward functions on Problem A (sparse, shaped, potential based, random dense)
-  - `ablation2_state.py` — Three state representations on Problem A (tabular, linear FA, small conv features)
-  - `ablation3_algorithm.py` — Three algorithms on Problem C (argmax UCB, softmax, epsilon greedy)
-  - `ablation3b_kappa.py` — Seven point kappa sweep on Problem C
-  - `problem_c_30seeds.py` — 30 seed rerun of the Problem C main comparison
-  - `holdout_geography_v2.py` — Held out geography protocol demonstration on Problem D
-- `src/ablations/reproduce_all.py` — Runner with `--summary-only` mode for quick verification from committed JSON
-- `results/ablations/` — Committed JSON results and `summary.txt` for immediate inspection without rerunning
-- `tests/test_ablations.py` — Six smoke tests for the ablation modules
-- `docs/ablation_notes.md` — Documentation of every ablation, findings, and where they appear in the manuscript
-- `docs/__init__.py` — Makes `docs/` a proper Python package for module invocation
-- New reference categories in `docs/reference_classification.py`:
-  - `transportation` (4 references)
-  - `remote_sensing` (3 references)
-- `CHANGELOG.md` — This file
+### Corrections of v5 behaviour that changed results
+* Problem A: training now breaks ties between equal action values at
+  random. v5 broke ties by action index with the first action pointing
+  away from the goal, which made the sparse reward appear never to
+  converge; both deterministic orders are retained as a sensitivity
+  analysis.
+* Problem A, state ablation: the learning rate is tuned separately for each
+  representation on 20 tuning seeds (v5 used 0.1 versus 0.05, a confound).
+* Problem C: values quoted for the kappa sweep in the previous manuscript and
+  response letter (0.256, 0.110, 0.100) are not produced by the archived v5
+  code and could not be reproduced; all v6 analyses use one field generator.
+  Source locations are now fully random rather than
+  jittered around fixed centres; space filling starts at the centre (v5
+  started in a corner because of a sign error); IVR is exact over all
+  candidates (v5 sampled 100).
+* Problem D: collisions with the obstacle, including swaps, end the episode
+  as a failure (v5 penalised them but let the episode continue, so
+  evaluation counted collided runs as successes); evaluation enumerates
+  every initial obstacle state instead of sampling.
 
-### Changed
-- **Corpus expansion**: reference count grows from 80 (v3) to 98 (v4), a 22 percent increase, in response to reviewer 1 comment 2
-  - 18 new references added across GIScience, remote sensing, transportation MARL, spatial resource allocation, and OOD generalisation
-  - Applied to foundational ratio: 41 / 57 (42 percent / 58 percent)
-- **Figure 8 regenerated** with the 98 reference distribution. New leaders: Conservation and wildlife protection (6), Sensor placement (5), GIS-RL integration (5), Autonomous vehicles (4), Transportation and traffic MARL (4)
-- **Manuscript title** updated in `README.md` and `CITATION.cff` from "A Methodological Review and Practitioner's Guide" to "Methodological Gaps in GIScience and a Research Agenda"
-- **Author list** filled in `CITATION.cff` with the full seven author affiliations
-- `setup.py` version bumped to 4.0.0
-- CI workflow adds two verification steps: `docs.reference_classification` and `src.ablations.reproduce_all --summary-only`
+### New designs
+* Problem B: one-lane corridor map that forces yielding; own-position and
+  joint-state independent learners and a centralised joint-action learner.
+* Problem C: learned RL policies (REINFORCE and linear Q-learning) trained
+  with two rewards and evaluated on held-out and shifted fields.
+* Problem D: row-blind versus row-aware state crossed with fixed versus
+  varied training rows; held-out rows and a two-obstacle test.
 
-### Fixed
-- Figure numbering consistency: v4 correctly orders Fig. 2 as the taxonomy and Fig. 3 as the Q learning gridworld, matching the revised manuscript cross references
-- README's figure table updated to reflect the corrected numbering
-
-### Notes
-- All 13 tests pass (7 existing simulation smoke tests + 6 new ablation smoke tests)
-- Ablation runtime: about 5 minutes single threaded on a modern laptop
-- Full reproduction of figures and ablations: about 10 minutes total
-
-## [3.0.0] — 2026-04-30
-
-### Added
-- Expanded reference corpus with ecology, conservation, water management, forestry, and GIScience literatures (from 60 to 80 references)
-- New citations: Lapeyrolerie et al. 2022 (Methods in Ecology and Evolution), Marrec & Boettiger 2023, Subramanian & Crowley 2018, Zhang et al. 2024 (GIScience spatial resource allocation survey), and 11 others
-
-### Changed
-- Manuscript title updated to include "GIScience" framing
-- Section 5.5 corpus paragraph and Figure 8 regenerated with honest applied-to-foundational ratio
-
-## [2.0.0] — 2026-04-24
-
-### Added
-- Five synthesis tables integrated into the manuscript
-- Ecology and GIS rebalance across canonical problems and gap discussions
-
-## [1.0.0] — 2026-04-23
-
-### Added
-- Initial release
-- Four canonical simulations (Q learning gridworld, multi agent grid, adaptive sensor, dynamic obstacle)
-- Four illustrations (MDP framework, taxonomy, flowchart, applications)
-- Reproducible one command build via `src.reproduce_all`
-- CI workflow, tests, and package installation
+### Other
+* `src.utils.holm` excludes undefined (NaN) p values from a family; the
+  degenerate in-distribution test (all values 1.0) was removed from the
+  Problem D family.
+* Problem C manifest records each method against the zero-sensor prior on
+  every field (`vs_prior`).
+* `docs/coding_sheet_v5_stub.csv` removed; `docs/coding_sheet.csv` is the only
+  classification record.
+* Single seeding scheme (`numpy.random.SeedSequence`) for all problems.
+* Statistics: Holm within named families, Cliff's delta or matched-pairs
+  rank-biserial r, bootstrap intervals for paired differences.
+* All figures redrawn with a fixed colour semantics and no embedded titles.
+* `tools/check_consistency.py` audits numbers, cross references and citations.

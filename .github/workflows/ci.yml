@@ -12,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        # numpy 2.5.3 and scipy 1.18.1 (requirements.txt) need Python 3.12 or later
+        python-version: ["3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,28 +28,28 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install -e .
 
       - name: Run tests
         run: |
-          pytest -q
+          python -m pytest tests -q
 
-      - name: Smoke-test figure generation (quick)
+      - name: Rebuild manifest from committed raw results
         run: |
-          python -m src.reproduce_all --quick --dpi 100
+          python -m tools.build_manifest
 
-      - name: Print ablation summary from committed JSON
+      - name: Check manifest matches the committed copy (reference Python 3.13)
+        if: matrix.python-version == '3.13'
         run: |
-          python -m src.ablations.reproduce_all --summary-only
+          git diff --exit-code results/manifest.json
 
-      - name: Verify reference classification totals
+      - name: Smoke-test figure generation
         run: |
-          python -m docs.reference_classification
+          python -m src.figures.make_all
 
       - name: Upload figures as artifact
         uses: actions/upload-artifact@v4
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == '3.13'
         with:
           name: figures
-          path: figures/*.png
+          path: results/figures/*.png
           retention-days: 14
