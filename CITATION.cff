@@ -5,21 +5,28 @@ version: 6.0.0
 date-released: 2026-10-21
 license: MIT
 authors:
-  - family-names: Afrifa-Yamoah
-    given-names: Ebenezer
-    affiliation: Edith Cowan University
-  - family-names: Bradshaw
-    given-names: Stephen
-  - family-names: Awuah-Mensah
-    given-names: Yaw Kwaafo
-  - family-names: Nuakoh
-    given-names: Bright Wiredu
-  - family-names: Tan
-    given-names: Wei Hong
-  - family-names: Fouedjio
-    given-names: Francky
-  - family-names: Arya
-    given-names: Emet
+  - family-names: "Afrifa-Yamoah"
+    given-names: "Ebenezer"
+    affiliation: "School of Science, Edith Cowan University, Perth, Australia"
+    orcid: "https://orcid.org/0000-0003-1741-9249"
+  - family-names: "Bradshaw"
+    given-names: "Stephen"
+    affiliation: "Department of Primary Industries and Regional Development, Perth, Australia"
+  - family-names: "Awuah-Mensah"
+    given-names: "Yaw Kwaafo"
+    affiliation: "School of Science, Edith Cowan University, Perth, Australia"
+  - family-names: "Nuakoh"
+    given-names: "Bright Wiredu"
+    affiliation: "African Institute for Mathematical Sciences (AIMS), Kigali, Rwanda"
+  - family-names: "Tan"
+    given-names: "Wei Hong"
+    affiliation: "Data & Analytics, Rio Tinto, Perth, Australia"
+  - family-names: "Fouedjio"
+    given-names: "Francky"
+    affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
+  - family-names: "Arya"
+    given-names: "Emet"
+    affiliation: "Rio Tinto and Edith Cowan University, Perth, Australia"
 # identifiers:
 #   - type: doi
 #     value: 10.5281/zenodo.XXXXXXX   # add after the Zenodo release is minted
