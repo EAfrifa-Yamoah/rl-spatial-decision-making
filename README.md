@@ -1,5 +1,7 @@
 # rl-spatial-decision-making (v6)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23529868.svg)](https://doi.org/10.5281/zenodo.23529868)
+
 Code, raw results and figure scripts for *Reinforcement Learning for Spatial
 Decision Making: Methodological Gaps in GIScience and a Research Agenda*
 (Afrifa-Yamoah et al.).
